@@ -1,54 +1,50 @@
 package org.nitrox.formular;
 
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import javax.script.Bindings;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.script.SimpleBindings;
+import org.jruby.embed.LocalContextScope;
+import org.jruby.embed.LocalVariableBehavior;
+import org.jruby.embed.ScriptingContainer;
 
 public class JRubyScriptRunnerManager {
 
-    private ScriptEngine engine;
-    
-    private String defautScript;
-    
-    private CompiledScript compiledScript;
-    
+    //private ScriptEngine engine;
+    private ScriptingContainer ruby;
+    private static String defautScript;
+    private String formulaScript;
     private static final String filename = "src/main/ruby/formulaR.rb";
 
-    public JRubyScriptRunnerManager() throws ScriptException, FileNotFoundException {
-        System.setProperty("org.jruby.embed.localcontext.scope", "threadsafe");
-        System.setProperty("org.jruby.embed.localvariable.behavior", "transient");
-        String scriptFile = System.getProperty("user.dir") + "/" + filename;
-        System.out.println(scriptFile);
-        
-        ScriptEngineManager factory = new ScriptEngineManager();
-        this.engine = factory.getEngineByName("jruby");
-        
-        FileReader reader = new FileReader(scriptFile);
-        compiledScript = ((Compilable)engine).compile(reader);
-        //compiledScript.e
-        //defautScript = "script here"
+    public JRubyScriptRunnerManager() throws ScriptException, IOException {
+
+        if (defautScript == null) {
+            String path = System.getProperty("user.dir") + "/" + filename;
+            defautScript = Files.toString(new File(path), Charsets.UTF_8);
+        }
+
+        ruby = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
     }
 
-    private Object evalJavaBigDecimal(BigDecimal valor1, BigDecimal valor2) {
-        return valor1.subtract(valor2);
-    }
+    public BigDecimal eval() {
+              
+        BigDecimal valor1 = new BigDecimal("20.000006");
+        BigDecimal valor2 = new BigDecimal("10.000009");
+        System.out.println(valor1.divide(valor2, RoundingMode.UP));
 
-    public Object evalRuby(BigDecimal valor1, BigDecimal valor2) throws ScriptException {
-        Bindings bindings = new SimpleBindings();
-        bindings.put("valor1", valor1);
-        bindings.put("valor2", valor2);
-        bindings.put("formula", valor2);
-        //bindings.put("valor3", new BigDecimal("0.00"));
-        BigDecimal resultado = (BigDecimal) engine.eval(defautScript + "valor1 - valor2 + sqrt(4) + 2", bindings);
+        formulaScript = defautScript + "valor1 + valor2";
+
+        System.out.println("@########################@");
+        ruby.put("valor1", valor1);
+        ruby.put("valor2", valor2);
+        BigDecimal resultado = (BigDecimal) ruby.runScriptlet(formulaScript);
+
+        System.out.println(resultado);
+
         return resultado;
     }
 }
