@@ -5,6 +5,7 @@
 package org.nitrox.formular;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 /**
  *
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
  */
 public interface ScriptRunner {
     
-    public BigDecimal eval(BigDecimal ... values);    
+    public BigDecimal eval(String expression, HashSet<Variable> variables);    
     
-    public Integer eval(Integer ... values);
+    //public Integer eval(Integer ... values);
 }
