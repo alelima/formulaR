@@ -5,6 +5,7 @@
 
 package org.nitrox.formular;
 
+import com.google.common.base.Splitter;
 import java.math.BigDecimal;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -76,24 +77,58 @@ public class FormularTest {
         
         BigDecimal result = formula.eval();
         
-        assertEquals(new BigDecimal("1.27864215"), result);        
+        assertEquals(new BigDecimal("1.28"), result);        
     }
     
-    //@Test
-    public void shouldEvalBooleanToFormula() {
+    @Test
+    public void shouldEvalParantesis() {
         VariableBuild varBuild = new VariableBuild();
         
-        Variable area = varBuild.withNameAndWithValue("area", new BigDecimal("5.01")).build();
-        Variable height = varBuild.withNameAndWithValue("heigth", new BigDecimal("9.04")).build();
-        Variable width = varBuild.withNameAndWithValue("width", new BigDecimal("7.07")).build();
+        Variable height = varBuild.withNameAndWithValue("heigth", new BigDecimal("8.0")).build();
+        Variable width = varBuild.withNameAndWithValue("width", new BigDecimal("5.0")).build();
         
         Formula formula = new Formula();
-        formula.putVar(area, height, width);        
-        formula.setExpression("area = variable2 + variable3");
+        formula.putVar(height, width);        
+        formula.setExpression("((heigth + 2) / width)*3");
         
         BigDecimal result = formula.eval();
         
-        assertEquals(new BigDecimal("21.12"), result);        
+        assertEquals(new BigDecimal("6.0"), result);        
+    }
+    
+    @Test
+    public void shouldCheckIfIsValidExpression() {
+       
+       Formula formula = new Formula(); 
+       assertTrue(formula.isValid("variable2 + variable3"));
+       assertTrue(formula.isValid("variable2 + variable3 - variable4 * variable5 / variable6"));
+       assertTrue(formula.isValid("variable"));
+       
+       System.out.println("EXPRESSAO : variable2 + variable3 +");
+       assertFalse(formula.isValid("variable2 + variable3 + "));
+       
+       System.out.println("EXPRESSAO : variable2 variable3 +");
+       assertFalse(formula.isValid("variable2 variable3 + "));
+       
+       System.out.println("EXPRESSAO :variable2 @ variable3");
+       assertFalse(formula.isValid("variable2 @ variable3"));
+        
+ 
+    }
+    
+    @Test
+    public void shouldCheckIfIsValidExpressionForPattern() {
+       
+       Formula formula = new Formula(); 
+       String pattern = "\\^|log";
+       //assertTrue(formula.isValidForPattern("variable2 + variable3 - variable4 ^ variable5 log variable6", pattern));
+       
+       System.out.println("EXPRESSAO : variable2 + variable3 +");
+       assertFalse(formula.isValidForPattern("variable2 + variable3 + ", pattern));
+       
+       System.out.println("EXPRESSAO : variable2 + variable3 +");
+       assertFalse(formula.isValidForPattern("variable2 + variable3 log variable4 ln variable6 ", pattern));
+        
     }
     
 }
