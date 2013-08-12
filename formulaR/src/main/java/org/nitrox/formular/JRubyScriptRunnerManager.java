@@ -34,24 +34,6 @@ public class JRubyScriptRunnerManager implements ScriptRunner {
         }      
     }
 
-    public BigDecimal eval() {
-
-        BigDecimal valor1 = new BigDecimal("20.000006");
-        BigDecimal valor2 = new BigDecimal("10.000009");
-        System.out.println(valor1.divide(valor2, RoundingMode.UP));
-
-        formulaScript = defautScript + "valor1 + valor2";
-
-        System.out.println("@########################@");
-        ruby.put("valor1", valor1);
-        ruby.put("valor2", valor2);
-        BigDecimal resultado = (BigDecimal) ruby.runScriptlet(formulaScript);
-
-        System.out.println(resultado);
-
-        return resultado;
-    }
-
     @Override
     public BigDecimal eval(String expression, HashSet<Variable> variables) {
         formulaScript = defautScript + expression;        
@@ -61,9 +43,5 @@ public class JRubyScriptRunnerManager implements ScriptRunner {
         }
         
         return (BigDecimal) ruby.runScriptlet(formulaScript);
-    }
-    
-    
-
-    
+    }   
 }
