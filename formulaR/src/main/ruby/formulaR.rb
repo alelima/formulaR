@@ -2,22 +2,22 @@
 class Java::JavaMath::BigDecimal
   
   def + (operand)
-    self.add(convertToBigDecimal operand);
+    self.add(convert_to_big_decimal operand);
   end
   
   def - (operand)
-    self.subtract(convertToBigDecimal operand);
+    self.subtract(convert_to_big_decimal operand);
   end
   
   def * (operand)
-    self.multiply(convertToBigDecimal operand);      
+    self.multiply(convert_to_big_decimal operand);      
   end
       
   def / (operand)
-    self.divide(convertToBigDecimal(operand), Java::JavaMath::RoundingMode::HALF_EVEN);      
+    self.divide(convert_to_big_decimal(operand), Java::JavaMath::RoundingMode::HALF_EVEN);      
   end
     
-  def convertToBigDecimal number
+  def convert_to_big_decimal number
     if not number.is_a?(Java::JavaMath::BigDecimal)
       number = Java::JavaMath::BigDecimal.new(number.to_s)
     end 
