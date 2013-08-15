@@ -79,7 +79,9 @@ public class Formula {
     
     private HashSet<Variable> loadExpressionVariables(String expression) {
         HashSet<Variable> variables = new HashSet<Variable>();
-        for (String variablesName : Splitter.onPattern(defaultPatternOperators).omitEmptyStrings().split(expression)) {
+        String expressionWithNoParentesis = expression.replaceAll("[{|(|)|}]", "");
+        
+        for (String variablesName : Splitter.onPattern(defaultPatternOperators).omitEmptyStrings().split(expressionWithNoParentesis)) {
             Variable variable = new Variable();
             variable.setName(variablesName.trim());
             variable.setValue(new BigDecimal("1.00"));
@@ -89,10 +91,11 @@ public class Formula {
     }
     
     private boolean isScriptRunnable(String expression, HashSet<Variable> variables) {
-        try {
+        try {            
             scriptRunner.eval(expression, variables);
             return true;
-        } catch (Exception e) {
+        } catch (Exception e) {            
+            e.printStackTrace();
             //
         }
         return false;

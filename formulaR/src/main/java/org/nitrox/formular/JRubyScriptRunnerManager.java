@@ -30,7 +30,7 @@ public class JRubyScriptRunnerManager implements ScriptRunner {
             }
             ruby = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
         } catch (IOException ioe) {
-            
+            System.out.println(ioe.getMessage());
         }      
     }
 

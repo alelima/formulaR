@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  *
  * @author Alessandro Lima (alessandrolima@gmail.com)
  */
-class Variable {
+public class Variable {
     
     private String name;
 
@@ -21,7 +21,7 @@ class Variable {
         return name;
     }
     
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -29,7 +29,7 @@ class Variable {
         return value;
     }    
     
-    void setValue(BigDecimal value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
