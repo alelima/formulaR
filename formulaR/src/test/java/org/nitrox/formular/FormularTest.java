@@ -105,6 +105,7 @@ public class FormularTest {
        assertTrue(formula.isValid("variable2 + variable3"));
        assertTrue(formula.isValid("variable2 + variable3 - variable4 * variable5 / variable6"));
        assertTrue(formula.isValid("variable"));
+       assertTrue(formula.isValid("a + b * c"));
        
        System.out.println("EXPRESSAO : variable2 + variable3 +");
        assertFalse(formula.isValid("variable2 + variable3 + "));
@@ -150,6 +151,34 @@ public class FormularTest {
        variables.add(var5);
        
        String expression = "var1 + var2 - var3 * var4 / var5";
+       
+       Formula formula = new Formula(); 
+       HashSet<Variable> result = formula.getExpressionVariables(expression);
+       
+       assertEquals(variables.size(), result.size());
+       
+        for (Variable variable : result) {
+            assertTrue(variables.contains(variable));
+        }        
+    }
+    
+    @Test
+    public void shouldReturnTheVariablesOfFormulaExpressionWithParentesis() {
+       VariableBuild varBuild = new VariableBuild();
+       Variable var1 =  varBuild.withNameAndWithValue("var1", BigDecimal.ZERO).build();
+       Variable var2 =  varBuild.withNameAndWithValue("var2", BigDecimal.ZERO).build();
+       Variable var3 =  varBuild.withNameAndWithValue("var3", BigDecimal.ZERO).build();
+       Variable var4 =  varBuild.withNameAndWithValue("var4", BigDecimal.ZERO).build();
+       Variable var5 =  varBuild.withNameAndWithValue("var5", BigDecimal.ZERO).build();
+       
+       HashSet<Variable> variables = new HashSet<Variable>();
+       variables.add(var1);
+       variables.add(var2);
+       variables.add(var3);
+       variables.add(var4);
+       variables.add(var5);
+       
+       String expression = "(var1 + (var2 - var3) * var4)/ var5";
        
        Formula formula = new Formula(); 
        HashSet<Variable> result = formula.getExpressionVariables(expression);
