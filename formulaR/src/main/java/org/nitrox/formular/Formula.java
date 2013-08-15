@@ -14,7 +14,7 @@ import org.nitrox.formular.exception.NotValidExpressionException;
  *
  * @author Alessandro Lima (alessandrolima@gmail.com)
  */
-class Formula {
+public class Formula {
 
     private HashSet<Variable> formulaVariables = new HashSet<Variable>();
     private String expression;
@@ -32,7 +32,7 @@ class Formula {
      * Ex: formula.putVar(area, height, width)
      * @param variables 
      */
-    void putVar(Variable... variables) {
+    public void putVar(Variable... variables) {
         for (int i = 0; i < variables.length; i++) {
             formulaVariables.add(variables[i]);
         }
@@ -46,7 +46,7 @@ class Formula {
      * 
      * @param variables 
      */
-    void putVar(HashSet<Variable> variables) {
+    public void putVar(HashSet<Variable> variables) {
         this.formulaVariables = variables;
     }
 
@@ -54,7 +54,7 @@ class Formula {
         return expression;
     }
     
-    void setExpression(String expression) {
+    public void setExpression(String expression) {
         this.expression = expression;
     }    
     
