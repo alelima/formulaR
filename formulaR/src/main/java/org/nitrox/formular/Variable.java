@@ -11,18 +11,18 @@ import java.math.BigDecimal;
  *
  * @author Alessandro Lima (alessandrolima@gmail.com)
  */
-public class Variable {
+public class Variable implements Evaluable{
     
-    private String name;
+    private String description;
 
     private BigDecimal value;
     
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getValue() {
@@ -36,7 +36,7 @@ public class Variable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 97 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 97 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
 
@@ -49,7 +49,7 @@ public class Variable {
             return false;
         }
         final Variable other = (Variable) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
             return false;
         }
         return true;
