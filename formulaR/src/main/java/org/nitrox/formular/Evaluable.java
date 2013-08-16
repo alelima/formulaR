@@ -5,15 +5,18 @@
 package org.nitrox.formular;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 /**
  *
  * @author Alessandro Lima <alessandro.lima@serpro.gov.br>
  */
-public interface ScriptRunner {
+public interface Evaluable {
     
-    public BigDecimal eval(String expression, Set<Evaluable> evaluables);    
+    public String getDescription();
     
-    //public Integer eval(Integer ... values);
+    public void setDescription(String description);
+                
+    public BigDecimal getValue();
+    
+    public void setValue(BigDecimal value);
 }

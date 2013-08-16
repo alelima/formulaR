@@ -24,7 +24,7 @@ public class VariableBuild {
     
     public Variable build() {
         Variable var = new Variable();
-        var.setName(name);
+        var.setDescription(name);
         var.setValue(value);
         
         return var;

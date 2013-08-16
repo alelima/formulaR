@@ -5,9 +5,9 @@
 
 package org.nitrox.formular;
 
-import com.google.common.base.Splitter;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Set;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nitrox.formular.exception.NotValidExpressionException;
@@ -43,7 +43,7 @@ public class FormularTest {
         
         Formula formula = new Formula();
         formula.putVar(height, width);        
-        formula.setExpression("heigth * width + 2");
+        formula.setExpression("2 + (heigth * width)");
         
         BigDecimal result = formula.eval();
         
@@ -143,7 +143,7 @@ public class FormularTest {
        Variable var4 =  varBuild.withNameAndWithValue("var4", BigDecimal.ZERO).build();
        Variable var5 =  varBuild.withNameAndWithValue("var5", BigDecimal.ZERO).build();
        
-       HashSet<Variable> variables = new HashSet<Variable>();
+       HashSet<Evaluable> variables = new HashSet<Evaluable>();
        variables.add(var1);
        variables.add(var2);
        variables.add(var3);
@@ -153,11 +153,11 @@ public class FormularTest {
        String expression = "var1 + var2 - var3 * var4 / var5";
        
        Formula formula = new Formula(); 
-       HashSet<Variable> result = formula.getExpressionVariables(expression);
+       Set<Evaluable> result = formula.getExpressionVariables(expression);
        
        assertEquals(variables.size(), result.size());
        
-        for (Variable variable : result) {
+        for (Evaluable variable : result) {
             assertTrue(variables.contains(variable));
         }        
     }
@@ -171,7 +171,7 @@ public class FormularTest {
        Variable var4 =  varBuild.withNameAndWithValue("var4", BigDecimal.ZERO).build();
        Variable var5 =  varBuild.withNameAndWithValue("var5", BigDecimal.ZERO).build();
        
-       HashSet<Variable> variables = new HashSet<Variable>();
+       Set<Evaluable> variables = new HashSet<Evaluable>();
        variables.add(var1);
        variables.add(var2);
        variables.add(var3);
@@ -181,13 +181,38 @@ public class FormularTest {
        String expression = "(var1 + (var2 - var3) * var4)/ var5";
        
        Formula formula = new Formula(); 
-       HashSet<Variable> result = formula.getExpressionVariables(expression);
+      Set<Evaluable> result = formula.getExpressionVariables(expression);
        
        assertEquals(variables.size(), result.size());
        
-        for (Variable variable : result) {
+        for (Evaluable variable : result) {
             assertTrue(variables.contains(variable));
         }        
+    }
+    
+    @Test
+    public void shouldReturnTheVariablesOfExpressionAndNotTheNumbers() {
+       VariableBuild varBuild = new VariableBuild();
+       Variable var1 =  varBuild.withNameAndWithValue("var1", BigDecimal.ZERO).build();
+       Variable var2 =  varBuild.withNameAndWithValue("var2", BigDecimal.ZERO).build();
+       
+       HashSet<Variable> variables = new HashSet<Variable>();
+       variables.add(var1);
+       variables.add(var2);
+       
+       String expression = "var1 + var2 + 2";
+       
+       Formula formula = new Formula(); 
+       Set<Evaluable> result = formula.getExpressionVariables(expression);
+       
+       assertEquals(variables.size(), result.size());
+       
+       for (Evaluable variable : result) {
+            if(variable.getDescription().equals("2")) {
+                fail("Numbers not are variables");
+            }
+            assertTrue(variables.contains(variable));
+        }         
     }
     
     @Test (expected = NotValidExpressionException.class)
@@ -196,7 +221,7 @@ public class FormularTest {
        String expression = "var1 + var2 var3 * var4 / var5";
        
        Formula formula = new Formula(); 
-       HashSet<Variable> result = formula.getExpressionVariables(expression);
+       Set<Evaluable> result = formula.getExpressionVariables(expression);
               
     }
     
