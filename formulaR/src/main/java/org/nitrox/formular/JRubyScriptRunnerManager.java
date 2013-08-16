@@ -5,10 +5,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashSet;
-
-import javax.script.ScriptException;
+import java.util.Set;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.LocalVariableBehavior;
 import org.jruby.embed.ScriptingContainer;
@@ -20,6 +17,9 @@ public class JRubyScriptRunnerManager implements ScriptRunner {
     private static String defautScript;
     private String formulaScript;
     private static final String filename = "src/main/ruby/formulaR.rb";
+    
+    //I don't have proud of this, but it resolves the initial Fixnum/Float convert problem.
+    private String initExpression = "Java::JavaMath::BigDecimal.new(0.00) +";
 
     public JRubyScriptRunnerManager() {
 
@@ -35,11 +35,12 @@ public class JRubyScriptRunnerManager implements ScriptRunner {
     }
 
     @Override
-    public BigDecimal eval(String expression, HashSet<Variable> variables) {
+    public BigDecimal eval(String expression, Set<Evaluable> evaluables) {
+        expression = initExpression + expression;
         formulaScript = defautScript + expression;        
         
-        for (Variable variable : variables) {
-            ruby.put(variable.getName(), variable.getValue());
+        for (Evaluable evaluable : evaluables) {
+            ruby.put(evaluable.getDescription(), evaluable.getValue());
         }
         
         return (BigDecimal) ruby.runScriptlet(formulaScript);
